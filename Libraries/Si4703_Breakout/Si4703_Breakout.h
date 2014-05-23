@@ -51,19 +51,38 @@ cables. Too short of a cable may degrade reception.
 
 class Si4703_Breakout
 {
-  public:
-    Si4703_Breakout(int resetPin, int sdioPin, int sclkPin);
-    void powerOn();					// call in setup
+public:
+	Si4703_Breakout(int resetPin, int sdioPin, int sclkPin);
+	void powerOn();					// call in setup
 	void setChannel(int channel);  	// 3 digit channel number
 	int seekUp(); 					// returns the tuned channel or 0
 	int seekDown(); 				
 	void setVolume(int volume); 	// 0 to 15
 	void readRDS(char* message, long timeout);	
-									// message should be at least 9 chars
-									// result will be null terminated
-									// timeout in milliseconds
-  private:
-    int  _resetPin;
+	// message should be at least 9 chars
+	// result will be null terminated
+	// timeout in milliseconds
+	//***************************************************************
+	int infoFreq;
+	boolean infoStereo;
+	int infoVolume;
+	byte infoSignalLevel;
+	boolean infoMute;
+	boolean infoSoftMute;
+	boolean infoStandBy;
+
+	void updateInfo();
+
+	void mute();
+	void unMute();
+	void muteSwitch();
+
+	void standBy();
+	void standUp();
+	void standSwitch();
+	
+private:
+	int  _resetPin;
 	int  _sdioPin;
 	int  _sclkPin;
 	void si4703_init();
@@ -87,6 +106,7 @@ class Si4703_Breakout
 	static const uint16_t  CHANNEL = 0x03;
 	static const uint16_t  SYSCONFIG1 = 0x04;
 	static const uint16_t  SYSCONFIG2 = 0x05;
+	static const uint16_t  SYSCONFIG3 = 0x06;
 	static const uint16_t  STATUSRSSI = 0x0A;
 	static const uint16_t  READCHAN = 0x0B;
 	static const uint16_t  RDSA = 0x0C;
